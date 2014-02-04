@@ -1,5 +1,5 @@
 # coding=utf8
-import sublime, sublime_plugin, re
+import sublime, sublime_plugin, re, os
 
 class FindResultsCommitChanges(sublime_plugin.WindowCommand):
 	def run(self):
@@ -50,15 +50,20 @@ class FindResultsCommitChanges(sublime_plugin.WindowCommand):
 
 				for f in changes:
 					f = f.strip();
-					if f:
-						print('about modifying file '+f)
+					if f and os.path.exists(f):
 						content = self.read(f).split('\n');
+						file_modified = False
 						for k in changes[f].keys():
 							k = int(k)
 							# print('Line number: '+k)
 							# print('Has new value: '+changes[f][k]);
-							content[k] = changes[f][k]
-						self.write(f, "\n".join(content))
+							if content[k] != changes[f][k]:
+								content[k] = changes[f][k]
+								file_modified = True
+						if file_modified:
+							print('writting new content to file '+f)
+							self.write(f, "\n".join(content))
+
 
 
 	def is_enabled(self):

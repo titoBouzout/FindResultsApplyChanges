@@ -16,6 +16,7 @@
 - Double click in these lines with numbers and a colon will open the file :-/  ST default behaviour(how to disable it?)
 - Will not modify any other line, even if you insert a new line.
 - WONTFIX: Will write/read UTF8 files, if you have a file in another encoding, considering jumping to the U8 world. :)
+- Hook CTRL+S to apply the changes, and cancel the "save dialog" of the "Find Result".
 
 ## Source-code
 

@@ -6,7 +6,7 @@
 				[
 					{"caption":"-"},
 					{
-						"caption": "Find Results Commit Any Change Made",
+						"caption": "Find Results - Commit Any Change Made",
 						"command": "find_results_commit_changes"
 					}
 				]

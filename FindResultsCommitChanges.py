@@ -38,8 +38,8 @@ class FindResultsCommitChanges(sublime_plugin.WindowCommand):
 								changes[file_name]
 							except:
 								changes[file_name] = {}
-							# hold the change in the file name with line number+1 as index and content as value
-							changes[file_name][re.sub(r"^\s+([0-9]+)\:.*", "\\1", l)]  = re.sub(r"^\s+[0-9]+\: (.*)", '\\1', l)
+							# hold the change in the file name with line number as index and content as value
+							changes[file_name][int(re.sub(r"^\s+([0-9]+)\:.*", "\\1", l))-1]  = re.sub(r"^\s+[0-9]+\: (.*)", '\\1', l)
 						line = next(_content);
 						l = str(line)
 					file_name = re.sub(r'\:$', '', l)
@@ -54,9 +54,10 @@ class FindResultsCommitChanges(sublime_plugin.WindowCommand):
 						print('about modifying file '+f)
 						content = self.read(f).split('\n');
 						for k in changes[f].keys():
-							# print('Line number: '+k+'-1')
+							k = int(k)
+							# print('Line number: '+k)
 							# print('Has new value: '+changes[f][k]);
-							content[int(k)-1] = changes[f][k]
+							content[k] = changes[f][k]
 						self.write(f, "\n".join(content))
 
 

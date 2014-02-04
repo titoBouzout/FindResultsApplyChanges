@@ -26,7 +26,3 @@ https://github.com/SublimeText/FindResultsCommitChanges
 ## Forum Thread
 
 http://www.sublimetext.com/forum/viewtopic.php?f=6&t=14118
-
-# Like it? Support
-
-- https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=YNNRSS2UJ8P88&lc=UY&item_name=Support%20%20SideBarEnhancements%20Developer&amount=12%2e00&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted

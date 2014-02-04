@@ -28,7 +28,7 @@ class FindResultsCommitChanges(sublime_plugin.WindowCommand):
 
 			# get the changes
 
-				for line in iter(_content):
+				for line in _content:
 					l = str(line)
 					#print('about file:'+file_name);
 					while _match_numbered.match(l):
@@ -38,8 +38,10 @@ class FindResultsCommitChanges(sublime_plugin.WindowCommand):
 								changes[file_name]
 							except:
 								changes[file_name] = {}
+							k = int(re.sub(r"^\s+([0-9]+)(\:|\s).*", "\\1", l))-1
+							c = re.sub(r"^\s+[0-9]+(\: |  )(.*)", '\\2', l)
 							# hold the change in the file name with line number as index and content as value
-							changes[file_name][int(re.sub(r"^\s+([0-9]+)(\:|\s).*", "\\1", l))-1]  = re.sub(r"^\s+[0-9]+(\: |  )(.*)", '\\2', l)
+							changes[file_name][k] = c
 						line = next(_content);
 						l = str(line)
 					file_name = re.sub(r'\:$', '', l)
@@ -63,8 +65,6 @@ class FindResultsCommitChanges(sublime_plugin.WindowCommand):
 						if file_modified:
 							print('writting new content to file '+f)
 							self.write(f, "\n".join(content))
-
-
 
 	def is_enabled(self):
 		for view in sublime.active_window().views():

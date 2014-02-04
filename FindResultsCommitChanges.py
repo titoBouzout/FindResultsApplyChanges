@@ -61,9 +61,6 @@ class FindResultsCommitChanges(sublime_plugin.WindowCommand):
 
 
 	def is_enabled(self):
-		return self.view_exists()
-
-	def view_exists(self):
 		for view in sublime.active_window().views():
 			if view.name() == 'Find Results':
 				return True

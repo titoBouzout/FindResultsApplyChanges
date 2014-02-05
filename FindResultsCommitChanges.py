@@ -1,79 +1,97 @@
 # coding=utf8
-import sublime, sublime_plugin, re, os
+import sublime, sublime_plugin
+import re, os
 
-class FindResultsCommitChanges(sublime_plugin.WindowCommand):
+debug = False
+
+class FindResultsCommitChangesListener(sublime_plugin.EventListener):
+
+	def on_modified(self, v):
+		if v.name() == 'Find Results':
+			if debug:
+				draw = sublime.DRAW_OUTLINED
+			else:
+				draw = sublime.HIDDEN
+			region_lines  = v.find_all(r'^ +([0-9]+)(\: |  )')
+			v.erase_regions('FindResultsCommitChanges-lines')
+			v.add_regions('FindResultsCommitChanges-lines', region_lines, 'entity.name.function', '', draw)
+
+			region_files  = v.find_all(r'^\n[^\n]+\:\n')
+			v.erase_regions('FindResultsCommitChanges-files')
+			v.add_regions('FindResultsCommitChanges-files', region_files, 'entity.class.name', '', draw)
+
+class FindResultsCommitChangesCommand(sublime_plugin.WindowCommand):
+
 	def run(self):
-		for view in sublime.active_window().views():
-			if view.name() == 'Find Results':
+		for v in sublime.active_window().views():
+			if v.name() == 'Find Results':
 
-			# get "Find Results" buffer contents
+			# get 'Find Results' buffer contents
 
-				_content = view.substr(sublime.Region(0, view.size())).split("\n")
-				# pop the header "Searching 2 files for "aa" and the empty line
-				_content.pop(0)
-				_content.pop(0)
+				region_files = v.get_regions('FindResultsCommitChanges-files')
+				region_lines = v.get_regions('FindResultsCommitChanges-lines')
 
-				# get an iter
-				_content = iter(_content)
-
-				# regexps
-				_match_numbered = re.compile(r'^\s+([0-9]+|\.+$)', re.I);
-				_match_changed = re.compile(r'^\s+[0-9]+(\:|\s)', re.I);
-
-				# the first file name
-				file_name = str(re.sub(r'\:$', '', next(_content)))
-
-				# the list of changes to apply
 				changes = {}
 
-			# get the changes
+				for file in range(len(region_files)):
+					region_file = region_files[file]
+					try:
+						next_region_file = region_files[file+1]
+					except:
+						next_region_file = sublime.Region(v.size(), v.size())
+					file_name = re.sub(r'\:$', '', v.substr(region_file).strip())
 
-				for line in _content:
-					l = str(line)
-					#print('about file:'+file_name);
-					while _match_numbered.match(l):
-						if _match_changed.match(l):
-							#print('have to change'+l)
-							try:
-								changes[file_name]
-							except:
-								changes[file_name] = {}
-							k = int(re.sub(r"^\s+([0-9]+)(\:|\s).*", "\\1", l))-1
-							c = re.sub(r"^\s+[0-9]+(\: |  )(.*)", '\\2', l)
-							# hold the change in the file name with line number as index and content as value
-							changes[file_name][k] = c
-						line = next(_content);
-						l = str(line)
-					file_name = re.sub(r'\:$', '', l)
+					if debug:
+						print(file_name);
 
-				# print(changes);
+					changes[file_name] = {}
+
+					for line in range(len(region_lines)):
+
+						region_line = region_lines[line]
+						try:
+							next_region_line = region_lines[line+1]
+						except:
+							next_region_line = sublime.Region(v.size(), v.size())
+
+						if region_line.a > region_file.a and region_line.a < next_region_file.a:
+							line_number = int(re.sub(r'\:$', '', v.substr(region_line).strip()))-1
+							line_content = v.substr(sublime.Region(region_line.b, (next_region_line.a if next_region_line.a < next_region_file.a else next_region_file.a)-1))
+							line_content =  re.sub(r'\n   \.\.\.?$', '', line_content) # remove 'dots' placeholders
+							changes[file_name][line_number] = line_content
+
+				if debug:
+					print(changes)
+
+				# remove footer
+				if changes[file_name]:
+					footer_line = max(changes[file_name].keys())
+					changes[file_name][footer_line] = re.sub(r'\n\n[0-9]+ matche?s? (across|in) [0-9]+ files?$', '', changes[file_name][footer_line])
 
 			# apply changes
 
 				for f in changes:
 					f = f.strip();
-					if f and os.path.exists(f):
+					if f and changes[f] and os.path.exists(f):
 						content = self.read(f).split('\n');
-						file_modified = False
+						modified = False
 						for k in changes[f].keys():
 							k = int(k)
-							# print('Line number: '+k)
-							# print('Has new value: '+changes[f][k]);
 							if content[k] != changes[f][k]:
 								content[k] = changes[f][k]
-								file_modified = True
-						if file_modified:
-							print('writting new content to file '+f)
-							self.write(f, "\n".join(content))
+								if debug:
+									print('Line number: '+str(k+1))
+									print('Has new value: '+changes[f][k]);
+								modified = True
+						if modified:
+							print('Writing new content to file '+f)
+							self.write(f, '\n'.join(content))
 
 	def is_enabled(self):
-		for view in sublime.active_window().views():
-			if view.name() == 'Find Results':
-				return True
-		return False
+		return sublime.active_window().active_view() and sublime.active_window().active_view().name() == 'Find Results'
 
-	def read(self, name):
-		return open(name, 'r', newline='').read()
+	def read(self, f):
+		return open(f, 'r', newline='').read()
 
-	def write(self, name, content):
-		open(name, 'w+', encoding='utf8', newline='').write(str(content))
+	def write(self, f, c):
+		open(f, 'w+', encoding='utf8', newline='').write(str(c))

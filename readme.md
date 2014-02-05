@@ -4,19 +4,26 @@
 
 ## Description
 
-**Not ready for primetime.** Experimental package with the purpose to "commit" any change you made to a "Find Results" buffer. ie:
-- Search for "a" in a folder.
-- This will open a "Find Results" buffer listing all the files with "a" in it.
-- Change the "a" for a "b" in these lines that match content.
-- Go to -> "Main menubar" -> "Find" -> "Find Results Commit Any Change Made"
-- This will write all the changes made back to all the files.
+**Not ready for prime-time. ** Experimental package with the purpose to "commit" any change you made to a "Find Results" buffer. ie:
+- Search for "foo" in a folder.
+- This will open a "Find Results" buffer listing all the files with "foo" in it.
+- Change the instances of "foo" for "bar" or something else...
+- Go to the -> Main menubar -> "Find" -> "Find Results - Commit Any Change Made"
+- This will write all the changes made back to the files.
+- Will be enabled only if the focused view is the "Find Results" tab.
 
 ## Bugs
 
-- Double click in these lines with numbers and a colon will open the file :-/  ST default behaviour(how to disable it?)
-- Will not modify any other line, even if you insert a new line.
-- WONTFIX: Will write/read UTF8 files, if you have a file in another encoding, considering jumping to the U8 world. :)
-- Hook CTRL+S to apply the changes, and cancel the "save dialog" of the "Find Result".
+- Uses regions to allow you do mulltiline cahnges, but when inserting new newlines, will corrupt files **if you commit more than once**, this because the new newlines will offset the line numbers.
+
+## Possible features
+
+- Hook CTRL/CMD+S to apply the changes (how to?)
+- Double click in these lines with numbers and a colon will open the file, default ST behaviour(how to disable it?)
+
+## WONTFIX
+
+- Will write/read UTF8 files, if you have a file in another encoding, considering jumping to the U8 world. :)
 
 ## Source-code
 

@@ -4,10 +4,21 @@ import re, os
 
 debug = False
 
-class FindResultsCommitChangesListener(sublime_plugin.EventListener):
+class FindResultsCommitChangesCommand(sublime_plugin.WindowCommand):
 
-	def on_modified(self, v):
-		if v.name() == 'Find Results':
+	def run(self):
+
+		if sublime.active_window().active_view().name() == 'Find Results':
+			v = sublime.active_window().active_view()
+
+		# avoid corruption
+
+			if v.settings().get('FindResultsCommitChanges-possible-corruption', False):
+				sublime.message_dialog('Committing twice when new newlines has been inserted will corrupt the file. Skipping commit.')
+				return
+
+		# set 'Find results' regions
+
 			if debug:
 				draw = sublime.DRAW_OUTLINED
 			else:
@@ -20,79 +31,70 @@ class FindResultsCommitChangesListener(sublime_plugin.EventListener):
 			v.erase_regions('FindResultsCommitChanges-files')
 			v.add_regions('FindResultsCommitChanges-files', region_files, 'entity.class.name', '', draw)
 
-class FindResultsCommitChangesCommand(sublime_plugin.WindowCommand):
+		# get 'Find Results' regions
 
-	def run(self):
-		for v in sublime.active_window().views():
-			if v.settings().get('FindResultsCommitChanges-possible-corruption', False):
-				sublime.message_dialog('Committing twice when new newlines has been inserted will corrupt the file. Skipping commit.')
-				return
+			region_files = v.get_regions('FindResultsCommitChanges-files')
+			region_lines = v.get_regions('FindResultsCommitChanges-lines')
 
-			if v.name() == 'Find Results':
+			changes = {}
 
-			# get 'Find Results' buffer contents
+			for file in range(len(region_files)):
 
-				region_files = v.get_regions('FindResultsCommitChanges-files')
-				region_lines = v.get_regions('FindResultsCommitChanges-lines')
-
-				changes = {}
-
-				for file in range(len(region_files)):
-					region_file = region_files[file]
-					try:
-						next_region_file = region_files[file+1]
-					except:
-						next_region_file = sublime.Region(v.size(), v.size())
-					file_name = re.sub(r'\:$', '', v.substr(region_file).strip())
-
-					if debug:
-						print(file_name);
-
-					changes[file_name] = {}
-
-					for line in range(len(region_lines)):
-
-						region_line = region_lines[line]
-						try:
-							next_region_line = region_lines[line+1]
-						except:
-							next_region_line = sublime.Region(v.size(), v.size())
-
-						if region_line.a > region_file.a and region_line.a < next_region_file.a:
-							line_number = int(re.sub(r'\:$', '', v.substr(region_line).strip()))-1
-							line_content = v.substr(sublime.Region(region_line.b, (next_region_line.a if next_region_line.a < next_region_file.a else next_region_file.a)-1))
-							line_content =  re.sub(r'\n +\.\.?\.?$', '', line_content) # remove 'dots' placeholders
-							changes[file_name][line_number] = line_content
+				region_file = region_files[file]
+				try:
+					next_region_file = region_files[file+1]
+				except:
+					next_region_file = sublime.Region(v.size(), v.size())
+				file_name = re.sub(r'\:$', '', v.substr(region_file).strip())
 
 				if debug:
-					print(changes)
+					print(file_name);
 
-				# remove footer
-				if changes[file_name]:
-					footer_line = max(changes[file_name].keys())
-					changes[file_name][footer_line] = re.sub(r'\n\n[0-9]+ matche?s? (across|in) [0-9]+ files?$', '', changes[file_name][footer_line])
+				changes[file_name] = {}
 
-			# apply changes
+				for line in range(len(region_lines)):
 
-				for f in changes:
-					f = f.strip();
-					if f and changes[f] and os.path.exists(f):
-						content = self.read(f).split('\n');
-						modified = False
-						for k in changes[f].keys():
-							k = int(k)
-							if content[k] != changes[f][k]:
-								content[k] = changes[f][k]
-								if debug:
-									print('Line number: '+str(k+1))
-									print('Has new value: '+changes[f][k]);
-								if '\n' in changes[f][k]:
-									v.settings().set('FindResultsCommitChanges-possible-corruption', True);
+					region_line = region_lines[line]
+					try:
+						next_region_line = region_lines[line+1]
+					except:
+						next_region_line = sublime.Region(v.size(), v.size())
 
-								modified = True
-						if modified:
-							print('Writing new content to file '+f)
-							self.write(f, '\n'.join(content))
+					if region_line.a > region_file.a and region_line.a < next_region_file.a:
+						line_number = int(re.sub(r'\:$', '', v.substr(region_line).strip()))-1
+						line_content = v.substr(sublime.Region(region_line.b, (next_region_line.a if next_region_line.a < next_region_file.a else next_region_file.a)-1))
+						line_content =  re.sub(r'\n +\.\.?\.?$', '', line_content) # remove 'dots' placeholders
+						changes[file_name][line_number] = line_content
+
+			if debug:
+				print(changes)
+
+			# remove footer
+			if changes[file_name]:
+				footer_line = max(changes[file_name].keys())
+				changes[file_name][footer_line] = re.sub(r'\n\n[0-9]+ matche?s? (across|in) [0-9]+ files?$', '', changes[file_name][footer_line])
+
+		# apply changes
+
+			for f in changes:
+				f = f.strip();
+				if f and changes[f] and os.path.exists(f):
+					content = self.read(f).split('\n');
+					modified = False
+					for k in changes[f].keys():
+						k = int(k)
+						if content[k] != changes[f][k]:
+							content[k] = changes[f][k]
+							if debug:
+								print('Line number: '+str(k+1))
+								print('Has new value: '+changes[f][k]);
+							if '\n' in changes[f][k]:
+								v.settings().set('FindResultsCommitChanges-possible-corruption', True);
+
+							modified = True
+					if modified:
+						print('Writing new content to file '+f)
+						self.write(f, '\n'.join(content))
 
 	def is_enabled(self):
 		return sublime.active_window().active_view() and sublime.active_window().active_view().name() == 'Find Results'

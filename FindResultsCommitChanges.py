@@ -24,6 +24,10 @@ class FindResultsCommitChangesCommand(sublime_plugin.WindowCommand):
 
 	def run(self):
 		for v in sublime.active_window().views():
+			if v.settings().get('FindResultsCommitChanges-possible-corruption', False):
+				sublime.message_dialog('Committing twice when new newlines has been inserted will corrupt the file. Skipping commit.')
+				return
+
 			if v.name() == 'Find Results':
 
 			# get 'Find Results' buffer contents
@@ -57,7 +61,7 @@ class FindResultsCommitChangesCommand(sublime_plugin.WindowCommand):
 						if region_line.a > region_file.a and region_line.a < next_region_file.a:
 							line_number = int(re.sub(r'\:$', '', v.substr(region_line).strip()))-1
 							line_content = v.substr(sublime.Region(region_line.b, (next_region_line.a if next_region_line.a < next_region_file.a else next_region_file.a)-1))
-							line_content =  re.sub(r'\n   \.\.\.?$', '', line_content) # remove 'dots' placeholders
+							line_content =  re.sub(r'\n +\.\.?\.?$', '', line_content) # remove 'dots' placeholders
 							changes[file_name][line_number] = line_content
 
 				if debug:
@@ -82,6 +86,9 @@ class FindResultsCommitChangesCommand(sublime_plugin.WindowCommand):
 								if debug:
 									print('Line number: '+str(k+1))
 									print('Has new value: '+changes[f][k]);
+								if '\n' in changes[f][k]:
+									v.settings().set('FindResultsCommitChanges-possible-corruption', True);
+
 								modified = True
 						if modified:
 							print('Writing new content to file '+f)

@@ -63,7 +63,7 @@ class FindResultsCommitChangesCommand(sublime_plugin.WindowCommand):
 					if region_line.a > region_file.a and region_line.a < next_region_file.a:
 						line_number = int(re.sub(r'\:$', '', v.substr(region_line).strip()))-1
 						line_content = v.substr(sublime.Region(region_line.b, (next_region_line.a if next_region_line.a < next_region_file.a else next_region_file.a)-1))
-						line_content =  re.sub(r'\n +\.\.?\.?$', '', line_content) # remove 'dots' placeholders
+						line_content =  re.sub(r'\n +\.+$', '', line_content) # remove 'dots' Ellipsis
 						changes[file_name][line_number] = line_content
 
 			if debug:

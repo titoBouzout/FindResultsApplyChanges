@@ -1,14 +1,14 @@
 **[Sublime Text 3+](http://www.sublimetext.com/) Package**. Install via an updated version of  [Package Control 2+](https://sublime.wbond.net/installation). Just **DON'T** install manually.
 
-# Find Results Commit Changes
+# Find Results Apply Changes
 
 ## Description
 
-"Commit" any change you made to a "Find Results" buffer back to the files. ie:
+Apply any change you made to a "Find Results" buffer back to the files. ie:
 - Search for "foo" in a folder.
 - This will open a "Find Results" buffer listing all the files with "foo" in it.
 - Change the instances of "foo" for "bar" or something else...
-- Go to the -> Main menubar -> "Find" -> "Find Results - Commit Any Change Made"
+- Go to the -> Main menubar -> "Find" -> "Find Results - Apply Changes"
 - This will write all the changes made back to the files.
 - Will be enabled only if the focused view is the "Find Results" tab.
 
@@ -27,7 +27,7 @@
 
 ## Source-code
 
-https://github.com/SublimeText/FindResultsCommitChanges
+https://github.com/SublimeText/FindResultsApplyChanges
 
 ## Forum Thread
 

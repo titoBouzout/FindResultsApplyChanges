@@ -1,5 +1,5 @@
 [
 
-	{"caption": "Find Results: Commit Any Change Made","command": "find_results_commit_changes"}
+	{"caption": "Find Results: Apply Changes","command": "find_results_apply_changes"}
 
 ]

@@ -4,7 +4,7 @@ import re, os
 
 debug = False
 
-class FindResultsCommitChangesCommand(sublime_plugin.WindowCommand):
+class FindResultsApplyChangesCommand(sublime_plugin.WindowCommand):
 
 	def run(self):
 
@@ -13,7 +13,7 @@ class FindResultsCommitChangesCommand(sublime_plugin.WindowCommand):
 
 		# avoid corruption
 
-			if v.settings().get('FindResultsCommitChanges-possible-corruption', False):
+			if v.settings().get('FindResultsApplyChanges-possible-corruption', False):
 				sublime.message_dialog('Committing twice when new newlines has been inserted will corrupt the file. Skipping commit.')
 				return
 
@@ -24,17 +24,17 @@ class FindResultsCommitChangesCommand(sublime_plugin.WindowCommand):
 			else:
 				draw = sublime.HIDDEN
 			region_lines  = v.find_all(r'^ +([0-9]+)(\: |  )')
-			v.erase_regions('FindResultsCommitChanges-lines')
-			v.add_regions('FindResultsCommitChanges-lines', region_lines, 'entity.name.function', '', draw)
+			v.erase_regions('FindResultsApplyChanges-lines')
+			v.add_regions('FindResultsApplyChanges-lines', region_lines, 'entity.name.function', '', draw)
 
 			region_files  = v.find_all(r'^\n[^\n]+\:\n')
-			v.erase_regions('FindResultsCommitChanges-files')
-			v.add_regions('FindResultsCommitChanges-files', region_files, 'entity.class.name', '', draw)
+			v.erase_regions('FindResultsApplyChanges-files')
+			v.add_regions('FindResultsApplyChanges-files', region_files, 'entity.class.name', '', draw)
 
 		# get 'Find Results' regions
 
-			region_files = v.get_regions('FindResultsCommitChanges-files')
-			region_lines = v.get_regions('FindResultsCommitChanges-lines')
+			region_files = v.get_regions('FindResultsApplyChanges-files')
+			region_lines = v.get_regions('FindResultsApplyChanges-lines')
 
 			changes = {}
 
@@ -89,7 +89,7 @@ class FindResultsCommitChangesCommand(sublime_plugin.WindowCommand):
 								print('Line number: '+str(k+1))
 								print('Has new value: '+changes[f][k]);
 							if '\n' in changes[f][k]:
-								v.settings().set('FindResultsCommitChanges-possible-corruption', True);
+								v.settings().set('FindResultsApplyChanges-possible-corruption', True);
 
 							modified = True
 					if modified:

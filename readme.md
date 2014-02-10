@@ -4,7 +4,7 @@
 
 ## Description
 
- **Not ready for prime-time.** Experimental package with the purpose to "commit" any change you made to a "Find Results" buffer. ie:
+"Commit" any change you made to a "Find Results" buffer back to the files. ie:
 - Search for "foo" in a folder.
 - This will open a "Find Results" buffer listing all the files with "foo" in it.
 - Change the instances of "foo" for "bar" or something else...
@@ -14,7 +14,7 @@
 
 ## Bugs
 
-- Uses regions to allow you do multiline changes, but when inserting new newlines, will corrupt files **if you commit more than once**, this because the new newlines will offset the line numbers. Will also 'corrupt' files if you add/remove newlines in other instances of the modified files. ie in another tab.
+- Uses regions to allow you do multiline changes, but when inserting new newlines, will corrupt files **if you commit more than once**, this because the new newlines will shift the line numbers. Will also 'corrupt' files if you add/remove newlines in other instances of the modified files. eg in another tab. To prevent corruption this packages will alert you and prevent most of these.
 
 ## Possible features
 

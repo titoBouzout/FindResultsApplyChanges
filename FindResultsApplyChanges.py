@@ -4,9 +4,9 @@ import re, os
 
 debug = False
 
-class FindResultsApplyChangesCommand(sublime_plugin.WindowCommand):
+class FindResultsApplyChangesCommand(sublime_plugin.TextCommand):
 
-	def run(self):
+	def run(self, edit):
 
 		if sublime.active_window().active_view().name() == 'Find Results':
 			v = sublime.active_window().active_view()

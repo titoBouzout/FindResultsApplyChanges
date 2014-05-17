@@ -4,6 +4,16 @@ import re, os
 
 debug = False
 
+class Save2Command(sublime_plugin.WindowCommand):
+
+	def run(self):
+		window = sublime.active_window()
+		view = window.active_view()
+		if window and view and 'Find Results.hidden-tmLanguage' in view.settings().get('syntax'):
+			view.run_command('find_results_apply_changes')
+		else:
+			view.run_command('save')
+
 class FindResultsApplyChangesCommand(sublime_plugin.TextCommand):
 
 	def run(self, edit):

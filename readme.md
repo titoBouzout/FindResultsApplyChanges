@@ -18,7 +18,6 @@ Apply any change you made to a "Find Results" buffer back to the files. ie:
 
 ## Possible features
 
-- Hook CTRL/CMD+S to apply the changes (how to?)
 - Double click in these lines with numbers and a colon will open the file, default ST behaviour(how to disable it?)
 
 ## WONTFIX

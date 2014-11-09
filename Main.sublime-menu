@@ -1,14 +1,14 @@
 [
-		{
-				"caption": "Find",
-				"id": "find",
-				"children":
-				[
-					{"caption":"-"},
-					{
-						"caption": "Find Results - Apply Changes",
-						"command": "find_results_apply_changes"
-					}
-				]
-		}
+	{
+		"caption": "Find",
+		"id": "find",
+		"children":
+		[
+			{"caption":"-"},
+			{
+				"caption": "Find Results - Apply Changes",
+				"command": "find_results_apply_changes"
+			}
+		]
+	}
 ]

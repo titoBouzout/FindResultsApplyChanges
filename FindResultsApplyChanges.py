@@ -6,8 +6,6 @@ debug = False
 
 # Compatability
 ST3 = int(sublime.version()) > 3000
-if ST3:
-	basestring = str
 
 class Save2Command(sublime_plugin.WindowCommand):
 

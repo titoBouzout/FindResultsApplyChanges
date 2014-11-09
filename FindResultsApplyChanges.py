@@ -3,6 +3,10 @@ import sublime, sublime_plugin
 import re, os
 
 debug = False
+# Compatability
+ST3 = int(sublime.version()) > 3000
+if ST3:
+	basestring = str
 
 class Save2Command(sublime_plugin.WindowCommand):
 
@@ -20,11 +24,6 @@ class FindResultsApplyChangesCommand(sublime_plugin.TextCommand):
 
 		if sublime.active_window().active_view().name() == 'Find Results':
 			v = sublime.active_window().active_view()
-
-		# Compatability
-			ST3 = int(sublime.version()) > 3000
-			if ST3:
-				basestring = str
 
 		# avoid corruption
 

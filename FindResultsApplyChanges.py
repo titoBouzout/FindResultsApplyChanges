@@ -22,9 +22,9 @@ class FindResultsApplyChangesCommand(sublime_plugin.TextCommand):
 			v = sublime.active_window().active_view()
 
 		# Compatability
-		ST3 = int(sublime.version()) > 3000
-		if ST3:
-		    basestring = str
+			ST3 = int(sublime.version()) > 3000
+			if ST3:
+				basestring = str
 
 		# avoid corruption
 

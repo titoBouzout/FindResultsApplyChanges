@@ -4,6 +4,11 @@ import re, os
 
 debug = False
 
+# Compatability
+ST3 = int(sublime.version()) > 3000
+if ST3:
+	basestring = str
+
 class Save2Command(sublime_plugin.WindowCommand):
 
 	def run(self):
@@ -110,7 +115,13 @@ class FindResultsApplyChangesCommand(sublime_plugin.TextCommand):
 		return sublime.active_window().active_view() and sublime.active_window().active_view().name() == 'Find Results'
 
 	def read(self, f):
-		return open(f, 'r', newline='').read()
+		if ST3:
+			return open(f, 'r', newline='').read()
+		else:
+			return open(f, 'r').read()
 
 	def write(self, f, c):
-		open(f, 'w+', encoding='utf8', newline='').write(str(c))
+		if ST3:
+			open(f, 'w+', encoding='utf8', newline='').write(str(c))
+		else:
+			open(f, 'w+').write(str(c))

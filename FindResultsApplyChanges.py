@@ -21,6 +21,11 @@ class FindResultsApplyChangesCommand(sublime_plugin.TextCommand):
 		if sublime.active_window().active_view().name() == 'Find Results':
 			v = sublime.active_window().active_view()
 
+		# Compatability
+		ST3 = int(sublime.version()) > 3000
+		if ST3:
+		    basestring = str
+
 		# avoid corruption
 
 			if v.settings().get('FindResultsApplyChanges-possible-corruption', False):
@@ -110,7 +115,14 @@ class FindResultsApplyChangesCommand(sublime_plugin.TextCommand):
 		return sublime.active_window().active_view() and sublime.active_window().active_view().name() == 'Find Results'
 
 	def read(self, f):
-		return open(f, 'r', newline='').read()
+		if ST3:
+		   return open(f, 'r', newline='').read()
+		else:
+		    return open(f, 'r').read()
+		# return open(f, 'r', newline='').read()
 
 	def write(self, f, c):
-		open(f, 'w+', encoding='utf8', newline='').write(str(c))
+		if ST3:
+			open(f, 'w+', encoding='utf8', newline='').write(str(c))
+		else:
+			open(f, 'w+', encoding='utf8').write(str(c))

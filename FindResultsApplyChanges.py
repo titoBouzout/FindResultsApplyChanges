@@ -3,6 +3,7 @@ import sublime, sublime_plugin
 import re, os
 
 debug = False
+
 # Compatability
 ST3 = int(sublime.version()) > 3000
 if ST3:
@@ -115,10 +116,9 @@ class FindResultsApplyChangesCommand(sublime_plugin.TextCommand):
 
 	def read(self, f):
 		if ST3:
-		   return open(f, 'r', newline='').read()
+			return open(f, 'r', newline='').read()
 		else:
-		    return open(f, 'r').read()
-		# return open(f, 'r', newline='').read()
+			return open(f, 'r').read()
 
 	def write(self, f, c):
 		if ST3:

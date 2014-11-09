@@ -112,14 +112,18 @@ class FindResultsApplyChangesCommand(sublime_plugin.TextCommand):
 	def is_enabled(self):
 		return sublime.active_window().active_view() and sublime.active_window().active_view().name() == 'Find Results'
 
-	def read(self, f):
+	def read(self, filepath):
 		if ST3:
-			return open(f, 'r', newline='').read()
+			with open(filepath, 'r', newline='') as f:
+				return f.read()
 		else:
-			return open(f, 'r').read()
+			with open(filepath, 'r') as f:
+				return f.read()
 
-	def write(self, f, c):
+	def write(self, filepath, c):
 		if ST3:
-			open(f, 'w+', encoding='utf8', newline='').write(str(c))
+			with open(filepath, 'w+', encoding='utf8', newline='') as f:
+				f.write(str(c))
 		else:
-			open(f, 'w+').write(str(c))
+			with open(filepath, 'w+') as f:
+				f.write(str(c))

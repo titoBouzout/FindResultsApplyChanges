@@ -124,4 +124,4 @@ class FindResultsApplyChangesCommand(sublime_plugin.TextCommand):
 		if ST3:
 			open(f, 'w+', encoding='utf8', newline='').write(str(c))
 		else:
-			open(f, 'w+', encoding='utf8').write(str(c))
+			open(f, 'w+').write(str(c))

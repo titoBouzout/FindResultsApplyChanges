@@ -26,7 +26,7 @@ Apply any change you made to a "Find Results" buffer back to the files. ie:
 
 ## Source-code
 
-https://github.com/SublimeText/FindResultsApplyChanges
+https://github.com/titoBouzout/FindResultsApplyChanges
 
 ## Forum Thread
 

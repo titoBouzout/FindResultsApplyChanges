@@ -89,6 +89,7 @@ class FindResultsApplyChangesCommand(sublime_plugin.TextCommand):
 
 		# apply changes
 
+			modified_files = 0
 			for f in changes:
 				f = f.strip();
 				if f and changes[f] and os.path.exists(f):
@@ -103,11 +104,13 @@ class FindResultsApplyChangesCommand(sublime_plugin.TextCommand):
 								print('Has new value: '+changes[f][k]);
 							if '\n' in changes[f][k]:
 								v.settings().set('FindResultsApplyChanges-possible-corruption', True);
-
 							modified = True
 					if modified:
 						print('Writing new content to file '+f)
 						self.write(f, '\n'.join(content))
+						modified_files+=1
+			if modified_files:
+				sublime.status_message('Written modifications to '+str(modified_files)+' file(s) ')
 
 	def is_enabled(self):
 		return sublime.active_window().active_view() and sublime.active_window().active_view().name() == 'Find Results'

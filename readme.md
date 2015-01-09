@@ -23,6 +23,7 @@ Apply any change you made to a "Find Results" buffer back to the files. ie:
 ## WONTFIX
 
 - Will write/read UTF8 files, if you have a file in another encoding, considering jumping to the U8 world. :)
+- It converts line ending of files to Unix style
 
 ## Source-code
 

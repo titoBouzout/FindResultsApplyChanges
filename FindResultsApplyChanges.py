@@ -117,7 +117,7 @@ class FindResultsApplyChangesCommand(sublime_plugin.TextCommand):
 
 	def read(self, filepath):
 		if ST3:
-			with open(filepath, 'r', newline='', encoding='utf8') as f:
+			with open(filepath, 'r', newline=None, encoding='utf8') as f:
 				return f.read()
 		else:
 			with open(filepath, 'r') as f:

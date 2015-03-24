@@ -17,6 +17,13 @@ class Save2Command(sublime_plugin.WindowCommand):
 		else:
 			view.run_command('save')
 
+class FindResultsApplyChangesEventListener(sublime_plugin.EventListener):
+
+	def on_activated(self, view):
+		if view.name() == 'Find Results':
+			view.settings().set("result_file_regex", '')
+			view.settings().set("result_line_regex", '')
+
 class FindResultsApplyChangesCommand(sublime_plugin.TextCommand):
 
 	def run(self, edit):

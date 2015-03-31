@@ -92,7 +92,7 @@ class FindResultsApplyChangesCommand(sublime_plugin.TextCommand):
 			# remove footer
 			if changes[file_name]:
 				footer_line = max(changes[file_name].keys())
-				changes[file_name][footer_line] = re.sub(r'\n\n[0-9]+ matche?s? (across|in) [0-9]+ files?$', '', changes[file_name][footer_line])
+				changes[file_name][footer_line] = re.sub('\s+[0-9]+ matche?s? (across|in) [0-9]+ files?\s*$', '', changes[file_name][footer_line])
 
 		# apply changes
 

@@ -40,7 +40,7 @@ This package used to have a preference named "find_exclude_patterns", now NO lon
 
 To exlude a folder, you should add it to the "binary_file_patterns", for example to exlude the popular version control systems you can have something like this:
 
-    "find_exclude_patterns": [".svn/*", ".git/**", ".hg/**", "CVS/**"]
+    "binary_file_patterns": [".svn/**", ".git/**", ".hg/**", "CVS/**"]
 
 ## Source-code
 

@@ -15,16 +15,17 @@ class FindExcludePatternsOMG(sublime_plugin.EventListener):
 
             if 'where' in args and args['where']:
                 where = args['where']
+                where = where.replace('\\', '/')
                 where = where.replace('*', '')
-                where = re.sub('([a-z])\:/', '', where)
+                where = re.sub('([a-z])\:/', '', where, 0, re.I)
                 where = re.sub('/$', '', where)
                 new_exclude = []
                 for item in exclude:
                     thingy = item
                     thingy = thingy.replace('-*', '')
                     thingy = thingy.replace('*', '')
-                    thingy = re.sub('([a-z])\:/', '', thingy)
-                    thingy = re.sub('-/([a-z])\/', '', thingy)
+                    thingy = re.sub('([a-z])\:/', '', thingy, 0, re.I)
+                    thingy = re.sub('-/([a-z])\/', '', thingy, 0, re.I)
                     thingy = re.sub('/$', '', thingy)
                     if thingy not in where:
                         new_exclude.append(item)

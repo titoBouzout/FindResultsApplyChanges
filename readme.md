@@ -1,4 +1,3 @@
-**[Sublime Text 3+](http://www.sublimetext.com/) Package**. Install via an updated version of  [Package Control 2+](https://sublime.wbond.net/installation). Just **DON'T** install manually.
 
 # Find Results Apply Changes
 
@@ -40,7 +39,11 @@ This package used to have a preference named "find_exclude_patterns", now NO lon
 
 To exlude a folder, you should add it to the "binary_file_patterns", for example to exlude the popular version control systems you can have something like this:
 
-    "binary_file_patterns": [".svn/**", ".git/**", ".hg/**", "CVS/**"]
+	"binary_file_patterns": [".svn/**", ".git/**", ".hg/**", "CVS/**"]
+
+### Installation
+
+Download or clone the contents of this repository to a folder named exactly as the package name into the Packages/ folder of ST.
 
 ## Source-code
 

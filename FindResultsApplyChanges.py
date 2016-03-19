@@ -7,6 +7,13 @@ debug = False
 # Compatability
 ST3 = int(sublime.version()) > 3000
 
+global packageSettings
+packageSettings = {}
+
+def plugin_loaded():
+	global packageSettings
+	packageSettings = sublime.load_settings('FindResultsApplyChanges.sublime-settings')
+
 class Save2Command(sublime_plugin.WindowCommand):
 
 	def run(self):
